@@ -1,6 +1,3 @@
-// 逛店、浏览操作，若手机、网络响应过慢，可适当增加
-var swipeWaiting = 4000;
-
 // 检查无障碍模式是否启用
 if(app.versionCode >= 400) {
     auto.waitFor();
@@ -24,12 +21,17 @@ var appName = "手机淘宝";
 ShowMessage("打开" + appName)
 launchApp(appName);
 sleep(3000);
-ShowMessage("进入互动页面")
-desc("主互动").findOne().click();
-sleep(5000)
-ShowMessage("进入领瞄币页面")
-click(width * 0.9, height * 0.9);
-ShowMessage("开始领取瞄币")
+if(desc("主互动").exists()){
+    ShowMessage("进入互动页面")
+    desc("主互动").findOne().click();
+    sleep(5000)
+    ShowMessage("进入领瞄币页面")
+    click(width * 0.9, height * 0.9);
+    ShowMessage("开始领取瞄币")
+}
+else{
+    ShowMessage("主互动不存在，直接执行领瞄币")
+}
 // 执行领瞄币操作
 DoActions();
 ShowMessage("结束")
@@ -48,25 +50,42 @@ function DoActions() {
 }
 
 function DoVisitAction(actionName) {
+    if(!text(actionName).exists()) return;
+
     ShowMessage("准备" + actionName);
     while (text(actionName).exists()) {
         ShowMessage("存在" + actionName);
         text(actionName).findOne().click();
-        sleep(2000);
-        swipe(width / 2, height - 400, width / 2, 0, 1500);
+        sleep(1500);
+        swipe(width / 2, height - 400, width / 2, 0, 1000);
         sleep(6000);
-        swipe(width / 2, height - 400, width / 2, 0, 1500);
+        swipe(width / 2, height - 400, width / 2, 0, 1000);
         sleep(6000);
-        swipe(width / 2, height - 400, width / 2, 0, 1500);
-        sleep(swipeWaiting);
+        swipe(width / 2, height - 400, width / 2, 0, 1000);
+        var Timer = 0
+        // 这个等待最多15s
+        while(
+            Timer <= 15000 &&
+            !descMatches(" ?任务已?完成").exists() &&
+            !textMatches(" ?任务已?完成").exists()
+            // !className("android.view.View").text("任务已完成").exists() &&
+            // !className("android.view.View").text("任务完成").exists() &&
+            // !className("android.view.View").desc(" 任务完成").exists() &&
+            // !className("android.view.View").desc(" 任务已完成").exists()
+        ){
+            sleep(500);
+            Timer += 500;
+        }
+        sleep(500);
         back();
         sleep(1600);
     }
     ShowMessage("完成" + actionName);
 }
 
-function DoClickAction(actionName){
-    
+function DoClickAction(actionName) {
+    if(!text(actionName).exists()) return;
+
     ShowMessage("准备" + actionName)
     if (text(actionName).exists()) {
         text(actionName).findOne().click();
@@ -84,6 +103,7 @@ function ShowMessage(msg){
 }
 
 function DoLookAction(actionName) {
+    if(!text(actionName).exists()) return;
     // 去签到
     ShowMessage("准备" + actionName)
     while (text(actionName).exists()) {
