@@ -68,10 +68,6 @@ function DoVisitAction(actionName) {
             Timer <= 15000 &&
             !descMatches(" ?任务已?完成").exists() &&
             !textMatches(" ?任务已?完成").exists()
-            // !className("android.view.View").text("任务已完成").exists() &&
-            // !className("android.view.View").text("任务完成").exists() &&
-            // !className("android.view.View").desc(" 任务完成").exists() &&
-            // !className("android.view.View").desc(" 任务已完成").exists()
         ){
             sleep(500);
             Timer += 500;
