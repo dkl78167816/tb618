@@ -25,13 +25,30 @@ if(desc("主互动").exists()){
     ShowMessage("进入互动页面")
     desc("主互动").findOne().click();
     sleep(5000)
-    ShowMessage("进入领瞄币页面")
-    click(width * 0.9, height * 0.9);
-    ShowMessage("开始领取瞄币")
+    
 }
 else{
     ShowMessage("主互动不存在，直接执行领瞄币")
 }
+if(
+    descMatches("(.+)?我的列车(.+)?").exists() ||
+    textMatches("(.+)?我的列车(.+)?").exists()) {
+    if(!textMatches("关闭").exists()){
+        ShowMessage("进入领瞄币页面")
+        click(width * 0.9, height * 0.9);
+    }
+    if(textMatches("关闭").exists()){
+        ShowMessage("开始领取瞄币");
+    }else{
+        ShowMessage("无法检测到领瞄币窗口");
+        exit();
+    }
+}
+else{
+    ShowMessage("无法找到领瞄币界面");
+    exit();
+}
+
 // 执行领瞄币操作
 DoActions();
 ShowMessage("结束")
