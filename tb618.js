@@ -58,9 +58,9 @@ function DoVisitAction(actionName) {
         text(actionName).findOne().click();
         sleep(1500);
         swipe(width / 2, height - 400, width / 2, 0, 1000);
-        sleep(6000);
+        sleep(5000);
         swipe(width / 2, height - 400, width / 2, 0, 1000);
-        sleep(6000);
+        sleep(5000);
         swipe(width / 2, height - 400, width / 2, 0, 1000);
         var Timer = 0
         // 这个等待最多15s
@@ -74,7 +74,7 @@ function DoVisitAction(actionName) {
         }
         sleep(500);
         back();
-        sleep(1600);
+        sleep(1000);
     }
     ShowMessage("完成" + actionName);
 }
