@@ -36,6 +36,7 @@ if(
     if(!textMatches("关闭").exists()){
         ShowMessage("进入领瞄币页面")
         click(width * 0.9, height * 0.9);
+        sleep(1000);
     }
     if(textMatches("关闭").exists()){
         ShowMessage("开始领取瞄币");
