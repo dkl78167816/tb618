@@ -1,5 +1,13 @@
+// 逛店、浏览操作，若手机、网络响应过慢，可适当增加
+var swipeWaiting = 4000;
+
 // 检查无障碍模式是否启用
-auto.waitFor();
+if(app.versionCode >= 400) {
+    auto.waitFor();
+}
+else{
+    ShowMessage("版本号低于400，请手动检查无障碍模式")
+}
 // 获取设备
 var height = device.height;
 var width = device.width;
@@ -29,6 +37,8 @@ ShowMessage(
     "Github项目: tb618\n" +
     "好用的话请点个Star哦!");
 
+
+
 function DoActions() {
     DoClickAction("签到");
     DoClickAction("去兑换");
@@ -42,13 +52,13 @@ function DoVisitAction(actionName) {
     while (text(actionName).exists()) {
         ShowMessage("存在" + actionName);
         text(actionName).findOne().click();
-        sleep(1500);
-        swipe(width / 2, height - 400, width / 2, 0, 1000);
+        sleep(2000);
+        swipe(width / 2, height - 400, width / 2, 0, 1500);
         sleep(6000);
-        swipe(width / 2, height - 400, width / 2, 0, 1000);
+        swipe(width / 2, height - 400, width / 2, 0, 1500);
         sleep(6000);
-        swipe(width / 2, height - 400, width / 2, 0, 1000);
-        sleep(1500);
+        swipe(width / 2, height - 400, width / 2, 0, 1500);
+        sleep(swipeWaiting);
         back();
         sleep(1600);
     }
