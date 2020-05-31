@@ -30,7 +30,7 @@ launchApp(appName);
 sleep(3000);
 
 // 进入活动界面
-CheckAndGoActivity();
+CheckAndGoActivity(true);
 
 // 执行领瞄币操作
 DoActions();
@@ -117,7 +117,7 @@ function IsMainForm() {
     return className("android.view.View").desc("搜索").depth(12).exists();
 }
 
-function CheckAndGoActivity() {
+function CheckAndGoActivity(isBegining) {
     if (IsMainForm()) {
         ShowMessage("当前在主界面");
         if (desc("主互动").exists()) {
@@ -148,7 +148,9 @@ function CheckAndGoActivity() {
             sleep(1000);
         }
         if (textMatches("关闭").exists()) {
-            ShowMessage("开始领取瞄币");
+            if(isBegining) {
+                ShowMessage("开始领取瞄币");
+            }
         } else {
             ShowMessage("无法检测到领瞄币窗口");
             exit();
