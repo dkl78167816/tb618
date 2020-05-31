@@ -1,3 +1,10 @@
+/**
+ * @file   tb618.js
+ * @brief  淘宝618活动自动领瞄币脚本
+ * @author ZehuanZhang (https://github.com/ZehuanZhang)
+ * @detail 本脚本任何人可自由使用，不包含任何收费、协助点击、分享等内容，
+ *         若需移植、修改或分享，请保留该文件头，尊重劳动成果！
+ */
 // 检查无障碍模式是否启用
 if (app.versionCode >= 400) {
     auto.waitFor();
