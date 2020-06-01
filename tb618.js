@@ -119,27 +119,34 @@ function IsMainForm() {
 
 function CheckAndGoActivity(isBegining) {
     if (IsMainForm()) {
+        GoActivityFlag = false;
         ShowMessage("当前在主界面");
+        ShowMessage("尝试进入618列车界面")
         if (desc("主互动").exists()) {
             ShowMessage("进入互动页面")
-            desc("主互动").findOnce().click();
-            sleep(5000)
+            var goBtn = desc("主互动").findOnce()
+            if(goBtn){
+                goBtn.click();
+                GoActivityFlag = true;
+                sleep(5000)
+            }
         }
-        else if (className("android.widget.FrameLayout").depth(12).indexInParent(5).exists()) {
-            ShowMessage("进入618列车界面")
+        else {
             // 防止主页面浏览，导致无法进入列车界面
-            if (!TryGoActivityPage()) {
+            if (!(GoActivityFlag = TryGoActivityPage())) {
                 ClickMainPage();
-                sleep(1000);
-                while (!TryGoActivityPage()) {
-                    swipe(width / 2, 400, width / 2, height * 0.75, 1000);
+                sleep(2000);
+                var RetryCoutner = 0;
+                while (++RetryCoutner <= 10 && !(GoActivityFlag = TryGoActivityPage())) {
+                    swipe(width / 2, 400, width / 2, height * 0.4, 1000);
                     sleep(1000);
                 }
             }
             sleep(5000);
         }
-        else {
-            ShowMessage("主互动不存在，直接执行领瞄币")
+        if (!GoActivityFlag) {
+            ShowMessage("进入主互动界面失败！");
+            eixt();
         }
     }
     if (
@@ -192,7 +199,7 @@ function ClickMainPage() {
 
 function TryGoActivityPage() {
     var GoPage = className("android.widget.FrameLayout").
-        depth(12).indexInParent(5).boundsInside(0, 500, device.width, device.height - 600).findOnce();
+        depth(12).indexInParent(5).boundsInside(0, 200, device.width, device.height - 300).findOnce();
     if (GoPage) {
         GoPage.click();
         return true;
