@@ -128,9 +128,8 @@ function CheckAndGoActivity(isBegining) {
         else if (className("android.widget.FrameLayout").depth(12).indexInParent(5).exists()) {
             ShowMessage("进入618列车界面")
             // 防止主页面浏览，导致无法进入列车界面
-            for (var i = 0; i < 4; ++i) {
-                swipe(width / 2, 400, width / 2, height, 1000);
-            }
+            DoubleClickMainPage();
+            swipe(width / 2, 400, width / 2, height, 1000);
             sleep(1000);
             className("android.widget.FrameLayout").depth(12).indexInParent(5).click();
             sleep(5000);
@@ -143,8 +142,8 @@ function CheckAndGoActivity(isBegining) {
         descMatches("(.+)?我的列车(.+)?").exists() ||
         textMatches("(.+)?我的列车(.+)?").exists()) {
         if (!textMatches("关闭").exists()) {
-            ShowMessage("进入领瞄币页面")
-            click(width * 0.9, height * 0.9);
+            ShowMessage("进入领瞄币页面");
+            ClickLingmiaobi();
             sleep(1000);
         }
         if (textMatches("关闭").exists()) {
@@ -159,5 +158,25 @@ function CheckAndGoActivity(isBegining) {
     else {
         ShowMessage("无法找到领瞄币界面");
         exit();
+    }
+}
+
+function ClickLingmiaobi() {
+    var mbbtn = className("android.widget.Button").text("做任务，领喵币").findOne().parent();
+    if(mbbtn){
+        var bnd = mbbtn.bounds();
+        click(bnd.centerX(), bnd.centerY());
+    }
+    else{
+        click(width * 0.9, height * 0.9);
+    }
+}
+
+function DoubleClickMainPage(){
+    var MainPageBtn = className("android.widget.FrameLayout").clickable(true).selected(true).depth(9).findOne();
+    if(MainPageBtn){
+        MainPageBtn.click();
+        sleep(1200);
+        MainPageBtn.click();
     }
 }
