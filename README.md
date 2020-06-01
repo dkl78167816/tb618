@@ -1,6 +1,16 @@
 ### tb618自动领瞄币auto.js脚本
 **仅用于个人学习，请勿作为非法工具使用**
 
+**使用技巧**
+
+@Marcusias 提出通过远程拉取页面，实现自动使用最新脚本的方法，若能够正常连接githubusercontent.com，可以考虑直接在autojs中使用以下代码运行脚本：
+
+eval(http.get('https://raw.githubusercontent.com/ZehuanZhang/tb618/master/tb618.js').body.string());
+
+若不能够正常使用github，或部分github连接受限，请考虑使用[gitee](https://gitee.com/mimr/tb618)上的镜像项目：
+
+eval(http.get('https://gitee.com/mimr/tb618/raw/master/tb618.js').body.string())
+
 **请注意：建议使用autojs 4.0以上的版本运行**
 
 1. 使用本脚本前请安装auto.js软件
@@ -19,9 +29,11 @@
 
 > 最新更新
 
-2020/06/01 Update1: 优化按钮点击进入逻辑
+2020/06/01 Update2: 再次优化按钮点击逻辑（淘宝最近页面更新的较快，经常有变动）
 
 > 历史更新
+
+2020/06/01 Update1: 优化按钮点击进入逻辑
 
 2020/05/31 Update2: 适配新活动布局，避免淘宝骚操作，导致返回主界面中断领瞄币，基本可以全自动完成大多数领瞄币操作
 
