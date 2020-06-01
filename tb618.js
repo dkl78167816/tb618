@@ -53,7 +53,7 @@ function DoVisitAction(actionName) {
     ShowMessage("准备" + actionName);
     while (text(actionName).exists()) {
         ShowMessage("存在" + actionName);
-        text(actionName).findOne().click();
+        text(actionName).findOnce().click();
         sleep(1500);
         swipe(width / 2, height - 400, width / 2, 0, 1000);
         sleep(5000);
@@ -84,7 +84,7 @@ function DoClickAction(actionName) {
 
     ShowMessage("准备" + actionName)
     if (text(actionName).exists()) {
-        text(actionName).findOne().click();
+        text(actionName).findOnce().click();
         ShowMessage("完成" + actionName);
     }
     else {
@@ -104,7 +104,7 @@ function DoLookAction(actionName) {
     // 去签到
     ShowMessage("准备" + actionName)
     while (text(actionName).exists()) {
-        text(actionName).findOne(1000).click();
+        text(actionName).findOnce(1000).click();
         ShowMessage(actionName + "成功");
         back();
         sleep(5000);
@@ -122,17 +122,20 @@ function CheckAndGoActivity(isBegining) {
         ShowMessage("当前在主界面");
         if (desc("主互动").exists()) {
             ShowMessage("进入互动页面")
-            desc("主互动").findOne().click();
+            desc("主互动").findOnce().click();
             sleep(5000)
         }
         else if (className("android.widget.FrameLayout").depth(12).indexInParent(5).exists()) {
             ShowMessage("进入618列车界面")
             // 防止主页面浏览，导致无法进入列车界面
-            DoubleClickMainPage();
-            sleep(1000);
-            swipe(width / 2, 400, width / 2, height, 1000);
-            sleep(1000);
-            className("android.widget.FrameLayout").depth(12).indexInParent(5).click();
+            if (!TryGoActivityPage()) {
+                ClickMainPage();
+                sleep(1000);
+                while (!TryGoActivityPage()) {
+                    swipe(width / 2, 400, width / 2, height * 0.75, 1000);
+                    sleep(1000);
+                }
+            }
             sleep(5000);
         }
         else {
@@ -144,11 +147,12 @@ function CheckAndGoActivity(isBegining) {
         textMatches("(.+)?我的列车(.+)?").exists()) {
         if (!textMatches("关闭").exists()) {
             ShowMessage("进入领瞄币页面");
-            ClickLingmiaobi();
             sleep(1000);
+            ClickLingmiaobi();
+            sleep(1500);
         }
         if (textMatches("关闭").exists()) {
-            if(isBegining) {
+            if (isBegining) {
                 ShowMessage("开始领取瞄币");
             }
         } else {
@@ -163,27 +167,37 @@ function CheckAndGoActivity(isBegining) {
 }
 
 function ClickLingmiaobi() {
-    var mbbtn = className("android.widget.Button").text("做任务，领喵币").findOne().parent();
-    if(mbbtn){
+    var mbbtn = className("android.widget.Button").text("做任务，领喵币").findOnce().parent();
+    if (mbbtn) {
         var bnd = mbbtn.bounds();
         click(bnd.centerX(), bnd.centerY());
     }
-    else{
+    else {
         click(width * 0.9, height * 0.9);
     }
 }
 
-function DoubleClickMainPage(){
+function ClickMainPage() {
     // 查找淘宝按钮
     var MainPageBtn = className("android.widget.FrameLayout").clickable(true).selected(true).depth(9).findOnce();
-    if(MainPageBtn){ // 找到
+    if (MainPageBtn) { // 找到
         MainPageBtn.click();
         sleep(1200);
-        MainPageBtn.click();
     }
     else { //没有找到
-        click(width*0.125, height - 50);
+        click(width * 0.125, height - 50);
         sleep(1200);
-        click(width*0.125, height - 50);
+    }
+}
+
+function TryGoActivityPage() {
+    var GoPage = className("android.widget.FrameLayout").
+        depth(12).indexInParent(5).boundsInside(0, 500, device.width, device.height - 600).findOnce();
+    if (GoPage) {
+        GoPage.click();
+        return true;
+    }
+    else {
+        return false;
     }
 }
