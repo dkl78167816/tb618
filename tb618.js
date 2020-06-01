@@ -129,6 +129,7 @@ function CheckAndGoActivity(isBegining) {
             ShowMessage("进入618列车界面")
             // 防止主页面浏览，导致无法进入列车界面
             DoubleClickMainPage();
+            sleep(1000);
             swipe(width / 2, 400, width / 2, height, 1000);
             sleep(1000);
             className("android.widget.FrameLayout").depth(12).indexInParent(5).click();
