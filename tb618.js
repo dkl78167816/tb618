@@ -174,10 +174,16 @@ function ClickLingmiaobi() {
 }
 
 function DoubleClickMainPage(){
-    var MainPageBtn = className("android.widget.FrameLayout").clickable(true).selected(true).depth(9).findOne();
-    if(MainPageBtn){
+    // 查找淘宝按钮
+    var MainPageBtn = className("android.widget.FrameLayout").clickable(true).selected(true).depth(9).findOnce();
+    if(MainPageBtn){ // 找到
         MainPageBtn.click();
         sleep(1200);
         MainPageBtn.click();
+    }
+    else { //没有找到
+        click(width*0.125, height - 50);
+        sleep(1200);
+        click(width*0.125, height - 50);
     }
 }
