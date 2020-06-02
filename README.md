@@ -29,9 +29,11 @@ eval(http.get('https://gitee.com/mimr/tb618/raw/master/tb618.js').body.string())
 
 > 最新更新
 
-2020/06/02 Update2: 修复部分情况下无法正常进入领瞄币界面的错误
+2020/06/03 Update1: 若当天首次进入，支持自动领取祝福
 
 > 历史更新
+
+2020/06/02 Update2: 修复部分情况下无法正常进入领瞄币界面的错误
 
 2020/06/02 Update1: 优化部分操作逻辑，修复部分错误
 
