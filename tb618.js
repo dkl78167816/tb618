@@ -149,6 +149,13 @@ function CheckAndGoActivity(isBegining) {
             eixt();
         }
     }
+    // 跳出领取祝福的处理
+    var giftBtn = className("android.widget.Button").text("收下祝福").findOnce();
+    if(giftBtn){
+        ShowMessage(领取祝福);
+        giftBtn.click();
+        sleep(1500);
+    }
     if (
         descMatches("(.+)?我的列车(.+)?").exists() ||
         textMatches("(.+)?我的列车(.+)?").exists()) {
@@ -174,8 +181,9 @@ function CheckAndGoActivity(isBegining) {
 }
 
 function ClickLingmiaobi() {
-    var mbbtn = className("android.widget.Button").text("做任务，领喵币").findOnce().parent();
+    var mbbtn = className("android.widget.Button").text("做任务，领喵币").findOnce();
     if (mbbtn) {
+        mbbtn = mbbtn.parent();
         var bnd = mbbtn.bounds();
         click(bnd.centerX(), bnd.centerY());
     }
