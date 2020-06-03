@@ -207,7 +207,7 @@ function ClickMainPage() {
 
 function TryGoActivityPage() {
     var GoPage = className("android.widget.FrameLayout").
-        depth(12).indexInParent(5).boundsInside(0, 200, device.width, device.height - 300).findOnce();
+        depth(12).indexInParent(9).boundsInside(0, 200, device.width, device.height - 300).findOnce();
     if (GoPage) {
         GoPage.click();
         return true;
