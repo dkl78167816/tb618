@@ -122,28 +122,27 @@ function CheckAndGoActivity(isBegining) {
         GoActivityFlag = false;
         ShowMessage("当前在主界面");
         ShowMessage("尝试进入618列车界面")
-        if (desc("主互动").exists()) {
-            ShowMessage("进入互动页面")
-            var goBtn = desc("主互动").findOnce()
-            if(goBtn){
-                goBtn.click();
-                GoActivityFlag = true;
-                sleep(5000)
-            }
-        }
-        else {
+        // if (desc("主互动").exists()) {
+        //     ShowMessage("进入互动页面")
+        //     var goBtn = desc("主互动").findOnce()
+        //     if(goBtn){
+        //         goBtn.click();
+        //         GoActivityFlag = true;
+        //         sleep(7000)
+        //     }
+        // }
             // 防止主页面浏览，导致无法进入列车界面
-            if (!(GoActivityFlag = TryGoActivityPage())) {
-                ClickMainPage();
-                sleep(2000);
-                var RetryCoutner = 0;
-                while (++RetryCoutner <= 10 && !(GoActivityFlag = TryGoActivityPage())) {
-                    swipe(width / 2, 400, width / 2, height * 0.4, 1000);
-                    sleep(1000);
-                }
+        if (!(GoActivityFlag = TryGoActivityPage())) {
+            ClickMainPage();
+            sleep(2000);
+            var RetryCoutner = 0;
+            while (++RetryCoutner <= 10 && !(GoActivityFlag = TryGoActivityPage())) {
+                swipe(width / 2, 400, width / 2, height * 0.4, 1000);
+                sleep(1000);
             }
-            sleep(5000);
         }
+        sleep(6000);
+
         if (!GoActivityFlag) {
             ShowMessage("进入主互动界面失败！");
             eixt();
@@ -152,7 +151,7 @@ function CheckAndGoActivity(isBegining) {
     // 跳出领取祝福的处理
     var giftBtn = className("android.widget.Button").text("收下祝福").findOnce();
     if(giftBtn){
-        ShowMessage(领取祝福);
+        ShowMessage("领取祝福");
         giftBtn.click();
         sleep(1500);
     }
