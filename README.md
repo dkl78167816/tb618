@@ -29,9 +29,11 @@ eval(http.get('https://gitee.com/mimr/tb618/raw/master/tb618.js').body.string())
 
 > 最新更新
 
-2020/06/04 Update3: 部分优化，支持农场操作（最好手动操作使其超过2级）
+2020/06/04 Update4: 支持手动关闭无障碍模式
 
 > 历史更新
+
+2020/06/04 Update3: 部分优化，支持农场操作（最好手动操作使其超过2级）
 
 2020/06/04 Update2: 支持去观看操作
 
