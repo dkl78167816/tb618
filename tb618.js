@@ -6,18 +6,11 @@
  *         若需移植、修改或分享，请保留该文件头，尊重劳动成果！
  */
 // 检查无障碍模式是否启用
-if("undefined" == typeof GlobalDisableWaitFor) var GlobalDisableWaitFor = false;
-if (!GlobalDisableWaitFor) {
-    ShowMessage("检测无障碍模式是否开启");
-    if (app.versionCode >= 400) {
-        auto.waitFor();
-    }
-    else {
-        ShowMessage("版本号低于400，请手动检查无障碍模式")
-    }
+if (app.versionCode >= 400) {
+    auto.waitFor();
 }
-else{
-    ShowMessage("无障碍模式检测已关闭");
+else {
+    ShowMessage("版本号低于400，请手动检查无障碍模式")
 }
 // 获取设备屏幕信息
 var height = device.height;
@@ -42,39 +35,19 @@ CheckAndGoActivity(true);
 // 执行领瞄币操作
 DoActions();
 ShowMessage("结束")
-ShowMessage(
-    "Github项目: tb618\n" +
-    "好用的话请点个Star哦!");
 
 function DoActions() {
     DoClickAction("签到");
-    DoClickAction("去兑换");
+    // DoClickAction("去兑换");
     DoVisitAction("去浏览");
     DoVisitAction("去进店");
     DoVisitAction("去围观");
     DoLookAction("去观看");
-    DoFarmAction();
-}
-
-function WaitActionFinished(Timeout) {
-    if(!Timeout) Timeout = 15000;
-
-    var Timer = 0
-    // 这个等待最多15s
-    while (
-        Timer <= 15000 &&
-        !descMatches(" ?任务已?完成").exists() &&
-        !textMatches(" ?任务已?完成").exists()
-    ) {
-        sleep(500);
-        Timer += 500;
-    }
 }
 
 function DoVisitAction(actionName) {
     if (!text(actionName).exists()) return;
 
-    ShowMessage("准备" + actionName);
     while (text(actionName).exists()) {
         ShowMessage("存在" + actionName);
         text(actionName).findOnce().click();
@@ -84,8 +57,16 @@ function DoVisitAction(actionName) {
         swipe(width / 2, height - 400, width / 2, 0, 1000);
         sleep(5000);
         swipe(width / 2, height - 400, width / 2, 0, 1000);
-        // 鉴于前面操作需要一部分时间，这里减少一些
-        WaitActionFinished(10000);
+        var Timer = 0
+        // 这个等待最多15s
+        while (
+            Timer <= 15000 &&
+            !descMatches(" ?任务已?完成").exists() &&
+            !textMatches(" ?任务已?完成").exists()
+        ) {
+            sleep(500);
+            Timer += 500;
+        }
         sleep(500);
         back();
         sleep(1000);
@@ -117,46 +98,27 @@ function ShowMessage(msg) {
 
 function DoLookAction(actionName) {
     if (!text(actionName).exists()) return;
-    
-    ShowMessage("准备" + actionName)
+
     while (text(actionName).exists()) {
         ShowMessage("存在" + actionName);
         text(actionName).findOnce().click();
-        WaitActionFinished();
+        var Timer = 0
+        // 这个等待最多15s
+        while (
+            Timer <= 15000 &&
+            !descMatches(" ?任务已?完成").exists() &&
+            !textMatches(" ?任务已?完成").exists()
+        ) {
+            sleep(500);
+            Timer += 500;
+        }
+        sleep(500);
         ShowMessage("完成" + actionName);
         back();
         sleep(1000);
+        // 防止淘宝骚操作，若返回主界面，尝试重新进入活动界面
+        CheckAndGoActivity();
     }
-    ShowMessage("完成" + actionName);
-}
-
-function DoFarmAction(){
-    actionName = "去收菜";
-    var Btn = text(actionName).findOnce();
-    if (Btn) 
-        Btn.click();
-    else
-        return;
-    ShowMessage("准备" + actionName);
-    sleep(4000);
-    var GameRegion = className("android.view.View").depth(8).indexInParent(1).findOnce();
-    if (GameRegion) {
-        var aBnd = GameRegion.bounds();
-        var X = aBnd.left;
-        var Y = aBnd.top;
-        var HStep = aBnd.height() / 5;
-        var WStep = aBnd.width() / 4;
-        click(X + WStep * 2, Y + HStep * 4)
-        sleep(1500);
-        click(X + WStep * 2, Y + HStep * 4)
-        sleep(1500);
-        click(X + WStep * 2, Y + HStep * 4)
-        sleep(1500);
-        back();
-    }
-    else 
-        ShowMessage("无法定位界面");
-
     ShowMessage("完成" + actionName);
 }
 
@@ -168,7 +130,17 @@ function CheckAndGoActivity(isBegining) {
     if (IsMainForm()) {
         GoActivityFlag = false;
         ShowMessage("当前在主界面");
-        ShowMessage("尝试进入618列车界面");
+        ShowMessage("尝试进入618列车界面")
+        // if (desc("主互动").exists()) {
+        //     ShowMessage("进入互动页面")
+        //     var goBtn = desc("主互动").findOnce()
+        //     if(goBtn){
+        //         goBtn.click();
+        //         GoActivityFlag = true;
+        //         sleep(7000)
+        //     }
+        // }
+            // 防止主页面浏览，导致无法进入列车界面
         if (!(GoActivityFlag = TryGoActivityPage())) {
             ClickMainPage();
             sleep(2000);
