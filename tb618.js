@@ -6,7 +6,7 @@
  *         若需移植、修改或分享，请保留该文件头，尊重劳动成果！
  */
 // 检查无障碍模式是否启用
-if("undefined" != typeof GlobalDisableWaitFor) var GlobalDisableWaitFor = false;
+if("undefined" == typeof GlobalDisableWaitFor) var GlobalDisableWaitFor = false;
 if (!GlobalDisableWaitFor) {
     ShowMessage("检测无障碍模式是否开启");
     if (app.versionCode >= 400) {
