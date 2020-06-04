@@ -6,11 +6,14 @@
  *         若需移植、修改或分享，请保留该文件头，尊重劳动成果！
  */
 // 检查无障碍模式是否启用
-if (app.versionCode >= 400) {
-    auto.waitFor();
-}
-else {
-    ShowMessage("版本号低于400，请手动检查无障碍模式")
+if("undefined" != typeof GlobalDisableWaitFor) var GlobalDisableWaitFor = false;
+if (!GlobalDisableWaitFor) {
+    if (app.versionCode >= 400) {
+        auto.waitFor();
+    }
+    else {
+        ShowMessage("版本号低于400，请手动检查无障碍模式")
+    }
 }
 // 获取设备屏幕信息
 var height = device.height;
@@ -51,7 +54,7 @@ function DoActions() {
 
 function WaitActionFinished(Timeout) {
     if(!Timeout) Timeout = 15000;
-    
+
     var Timer = 0
     // 这个等待最多15s
     while (
