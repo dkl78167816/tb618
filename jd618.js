@@ -45,13 +45,11 @@ gotoJd();
 
 sleep(1000 * speed);
 //签到
-decay = 200
-while (!text("已签到").exists()) {
-    text("去签到").findOne().click();
-    sleep(decay * speed);
-    decay += 200
+if (!text("已签到").exists()) {
+    text("签到").findOne().parent().click();
 }
-log("已签到")
+log("已签到");
+sleep(100);
 
 while (1) {
   var next = false;
@@ -64,49 +62,42 @@ while (1) {
       taskList.forEach(task => {
           switch (task) {
               case '8秒':
-                  if (c.search(task) != -1) {
-                      i++;
-                      next = true;
-                      log("开始执行8秒任务");
-                      sleep(random(501, 515) * speed);
-                      a.click();
-                      sleep(random(5001, 5011) * speed);
-                      textStartsWith("恭喜完成").findOne(8000);
-                      sleep(random(201, 211) * speed);
-                      back();
-                      log("已完成第" + i + "次任务！");
-                      sleep(random(201, 211) * speed);
-                      j = 0;
-                  }
+                    if (c.search(task) != -1) {
+                        i++;
+                        next = true;
+                        log("开始执行8秒任务");
+                        a.click();
+                        j = 0;
+                        while (!textContains("恭喜完成").exists()) {
+                            sleep(5000)
+                        }
+                        log("已完成第" + i + "次任务！");
+                        // descContains("返回").findOne().click();
+                        backPage();
+                        sleep(1000);
+                    }
                   break;
               case '浏览5个':
-                  if (c.search(task) != -1) {
-                      i++;
-                      next = true;
-                      log("开始执行浏览5个商品任务");
-                      sleep(random(501, 515) * speed);
-                      a.click();
-                      sleep(random(1001, 1031) * speed);
-                      for (var t = 0; t < 5; t++) {
-                          if (textContains("浏览以下").findOnce()) {
-                              log("正在浏览第" + (t + 1) + "个商品！");
-                              idContains("view_").findOnce(t).click();
-                              sleep(random(1501, 1535) * speed)
-                              back()
-                              sleep(random(1501, 1535) * speed)
-                          } else { }
-                      }
-                      textStartsWith("已完成").findOne(8000);
-                      sleep(random(1001, 1031) * speed);
-                      try {
-                          // 点击左上角的返回键
-                          id("fe").findOne().click();
-                      } catch (error) {
-                          back();
-                      }
-                      log("已完成第" + i + "次任务！");
-                      sleep(random(2001, 2051) * speed);
-                      j = 0;
+                    if (c.search(task) != -1) {
+                        i++;
+                        next = true;
+                        log("开始执行浏览5个商品任务");
+                        sleep(random(501, 515) * speed);
+                        a.click();
+                        sleep(random(1001, 1031) * speed);
+                        for (var t = 0; t < 5; t++) {
+                            if (textContains("浏览以下").findOnce()) {
+                                idContains("view_").findOnce(t).click();
+                                sleep(random(1501, 1535) * speed)
+                                back()
+                                sleep(random(1501, 1535) * speed)
+                            } else { }
+                        }
+                        textStartsWith("已完成").findOne(8000);
+                        sleep(random(1001, 1031) * speed);
+                        backPage();
+                        sleep(random(2001, 2051) * speed);
+                        j = 0;
                   }
                   break;
               case '去加购':
@@ -115,17 +106,12 @@ while (1) {
                       next = true;
                       a.click();
                       log("开始执行加购任务");
-                      sleep(random(1001, 1031) * speed);
+                      sleep(random(2001, 2031) * speed);
                       for (var t = 0; t < 5; t++) {
-                          //修复加购问题,删掉了.child(2)子节点
                           idContains("cart_").findOnce(t).click();
                           sleep(random(1001, 1031) * speed)
                       }
-                      try {
-                        id("fe").findOne().click();
-                      } catch (error) {
-                          back();
-                      }
+                      backPage();
                       log("已完成第" + i + "次任务！");
                       sleep(random(2001, 2051) * speed);
                       j = 0;
@@ -139,7 +125,6 @@ while (1) {
                       log("开始执行快速浏览任务");
                       sleep(random(1001, 1031) * speed);
                       back();
-                      log("已完成第" + i + "次任务！");
                       sleep(random(2001, 2051) * speed);
                       j = 0;
                   }
@@ -155,29 +140,32 @@ while (1) {
   }
 }
 
+function backPage() {
+    try {
+        id("fe").findOne().click();
+    } catch (error) {
+        back();
+    }
+}
 /**
  * 偏离脚本预期界面，进行纠正
  */
 function correct() {
-  log("可能出了点问题,正在尝试第一次纠正");
-  for (let index = 0; index < 3; index++) {
-    back();
-    sleep(1000 * speed);
-    var d = text("去完成").findOnce(j);
-    if (d != null) {
-      return
+    log("可能出了点问题,正在尝试第一次纠正");
+    for (let index = 0; index < 3; index++) {
+        back();
+        sleep(500 * speed);
+        if (text("去完成").findOnce(j) != null) {
+            return;
+        }
     }
-  }
 
-  if (d == null) {
     log("正在尝试第二次纠正");
     gotoJd();
-    var e = text("去完成").findOnce(j);
-    if (e == null) {
-      log("貌似没有任务了，脚本退出\n如未完成，请重新运行");
-      exit();
+    if (text("去完成").findOnce(j) == null) {
+        log("貌似没有任务了，脚本退出\n如未完成，请重新运行");
+        exit();
     }
-  }
 }
 
 /**
@@ -192,13 +180,19 @@ function gotoJd() {
     // 进入京东主界面，检查是否存在“我的”右下角，如果存在，点击进去，接着判断是否存在全民叠蛋糕活动，如果有则点击进入
     if(descContains("我的").exists()){
         descContains("我的").findOne().click();
-        sleep(1000 * speed);
+
         // 判断是否有全民叠蛋糕活动
-        if(textContains("全民").exists()){
-            log("进入叠蛋糕界面");
-            idContains("us").findOne().click();
+        var count = 0
+        while (!textContains("全民").exists()) {
+            if (count > 5) {
+                exit();
+            }
+            count += 1
+            sleep(1000 * speed);
         }
-    }
+        log("进入叠蛋糕界面");
+        idContains("us").findOne().click();
+    } else correct();
 
   sleep(1000 * speed);
   className("android.view.View").text("做任务领金币").waitFor();
@@ -208,7 +202,6 @@ function gotoJd() {
     className("android.view.View").text("做任务领金币").findOne().parent().click()
 
   }
-
   textContains("任务每日0点刷新").waitFor()
   sleep(1000 * speed);
 }
