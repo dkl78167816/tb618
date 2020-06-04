@@ -46,6 +46,20 @@ function DoActions() {
     DoVisitAction("去进店");
     DoVisitAction("去围观");
     DoLookAction("去观看");
+    DoFarmAction();
+}
+
+function WaitActionFinished(Timeout = 15000) {
+    var Timer = 0
+    // 这个等待最多15s
+    while (
+        Timer <= 15000 &&
+        !descMatches(" ?任务已?完成").exists() &&
+        !textMatches(" ?任务已?完成").exists()
+    ) {
+        sleep(500);
+        Timer += 500;
+    }
 }
 
 function DoVisitAction(actionName) {
@@ -61,16 +75,8 @@ function DoVisitAction(actionName) {
         swipe(width / 2, height - 400, width / 2, 0, 1000);
         sleep(5000);
         swipe(width / 2, height - 400, width / 2, 0, 1000);
-        var Timer = 0
-        // 这个等待最多15s
-        while (
-            Timer <= 15000 &&
-            !descMatches(" ?任务已?完成").exists() &&
-            !textMatches(" ?任务已?完成").exists()
-        ) {
-            sleep(500);
-            Timer += 500;
-        }
+        // 鉴于前面操作需要一部分时间，这里减少一些
+        WaitActionFinished(10000);
         sleep(500);
         back();
         sleep(1000);
@@ -106,11 +112,42 @@ function DoLookAction(actionName) {
     ShowMessage("准备" + actionName)
     while (text(actionName).exists()) {
         ShowMessage("存在" + actionName);
-        text(actionName).findOnce(1000).click();
+        text(actionName).findOnce().click();
+        WaitActionFinished();
         ShowMessage("完成" + actionName);
         back();
         sleep(1000);
     }
+    ShowMessage("完成" + actionName);
+}
+
+function DoFarmAction(){
+    actionName = "去收菜";
+    var Btn = text(actionName).findOnce();
+    if (Btn) 
+        Btn.click();
+    else
+        return;
+    ShowMessage("准备" + actionName);
+    sleep(4000);
+    var GameRegion = className("android.view.View").depth(8).indexInParent(1).findOnce();
+    if (GameRegion) {
+        var aBnd = GameRegion.bounds();
+        var X = aBnd.left;
+        var Y = aBnd.top;
+        var HStep = aBnd.height() / 5;
+        var WStep = aBnd.width() / 4;
+        click(X + WStep * 2, Y + HStep * 4)
+        sleep(1500);
+        click(X + WStep * 2, Y + HStep * 4)
+        sleep(1500);
+        click(X + WStep * 2, Y + HStep * 4)
+        sleep(1500);
+        back();
+    }
+    else 
+        ShowMessage("无法定位界面");
+
     ShowMessage("完成" + actionName);
 }
 
@@ -122,17 +159,7 @@ function CheckAndGoActivity(isBegining) {
     if (IsMainForm()) {
         GoActivityFlag = false;
         ShowMessage("当前在主界面");
-        ShowMessage("尝试进入618列车界面")
-        // if (desc("主互动").exists()) {
-        //     ShowMessage("进入互动页面")
-        //     var goBtn = desc("主互动").findOnce()
-        //     if(goBtn){
-        //         goBtn.click();
-        //         GoActivityFlag = true;
-        //         sleep(7000)
-        //     }
-        // }
-            // 防止主页面浏览，导致无法进入列车界面
+        ShowMessage("尝试进入618列车界面");
         if (!(GoActivityFlag = TryGoActivityPage())) {
             ClickMainPage();
             sleep(2000);
