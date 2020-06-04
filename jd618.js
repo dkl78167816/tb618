@@ -1,36 +1,31 @@
 //京东618叠蛋糕js脚本0521
 /**
- * 作者:ZainCheung
- * 代码参考并感谢:Mr.Lih,以及没有找到出处的一位大佬
+ * 作者: dkl78167816
+ * 代码参考并感谢:ZainCheung, Mr.Lih,以及没有找到出处的一位大佬
  */
 
-
-//速度
 var speed = 1;
 var taskList = ['去加购','8秒', '浏览5个', '浏览可得'];
+var appName = "京东";
 
-dialogs.alert("请确认无障碍和悬浮窗权限已开启,感谢使用\n作者:ZainCheung\n仅供学习参考\n吾爱首发");
+dialogs.alert("请确认无障碍和悬浮窗权限已开启,感谢使用\n作者:dkl78167816\n仅供学习参考");
 menu: while (true) {
-  var choose = dialogs.select("请根据你的手机性能(卡不卡)以及网速选择速度", "都挺好的,整个快速的", "一般吧,正常执行就好", "网速有点差,稍微慢点吧", "我手机很砖,整个最慢的吧");
+  var choose = dialogs.select("请根据你的手机性能(卡不卡)以及网速选择速度", "快速", "一般", "缓慢");
   switch (choose) {
     case -1:
       toast("请选择");
       continue menu;
     case 0:
       toast("即将快速执行脚本");
-      speed = 0.75;
+      speed = 1;
       break menu;
     case 1:
       toast("即将一般速度执行脚本");
-      speed = 1;
+      speed = 1.5;
       break menu;
     case 2:
       toast("即将低速执行脚本");
-      speed = 1.25;
-      break menu;
-    case 3:
-      toast("即将缓慢执行脚本");
-      speed = 1.5;
+      speed = 2;
       break menu;
 
     default:
@@ -46,25 +41,16 @@ sleep(1000);
 //打开活动页面
 log("正在进入个人中心");
 gotoJd();
-log("到达任务中心");
 
-
-//签到
 sleep(1000 * speed);
-if (text("去签到").exists()) {
-  text("去签到").findOne().click();
-  sleep(200 * speed);
-  log("签到成功")
+//签到
+decay = 200
+while (!text("已签到").exists()) {
+    text("去签到").findOne().click();
+    sleep(decay * speed);
+    decay += 200
 }
-if (text("已签到").exists()) {
-  sleep(1000 * speed);
-  log("已签到")
-} else {
-  text("签到").findOne().click();
-  sleep(1000 * speed);
-  log("签到成功")
-}
-sleep(2000 * speed);
+log("已签到")
 
 while (1) {
   var next = false;
@@ -169,11 +155,11 @@ while (1) {
 }
 
 /**
- * 纠正方法
+ * 偏离脚本预期界面，进行纠正
  */
 function correct() {
   log("可能出了点问题,正在尝试第一次纠正");
-  for (let index = 0; index < 5; index++) {
+  for (let index = 0; index < 3; index++) {
     back();
     sleep(1000 * speed);
     var d = text("去完成").findOnce(j);
@@ -184,22 +170,7 @@ function correct() {
 
   if (d == null) {
     log("正在尝试第二次纠正");
-    app.startActivity({
-      data: "openApp.jdMobile://virtual?params=%7B%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fbunearth.m.jd.com%2FbabelDiy%2FZeus%2F3xAU77DgiPoDvHdbXUZb95a7u71X%2Findex.html%22%2C%22category%22%3A%22jump%22%2C%22sourceType%22%3A%22JSHOP_SOURCE_TYPE%22%2C%22sourceValue%22%3A%22JSHOP_SOURCE_VALUE%22%2C%22M_sourceFrom%22%3A%22lkyl%22%2C%22msf_type%22%3A%22click%22%2C%22m_param%22%3A%7B%22m_source%22%3A%220%22%2C%22event_series%22%3A%7B%7D%2C%22jda%22%3A%22177095863.1664140455.1538579865.1572975960.1572979455.472%22%2C%22usc%22%3A%22androidapp%22%2C%22ucp%22%3A%22t_335139774%22%2C%22umd%22%3A%22appshare%22%2C%22utr%22%3A%22CopyURL%22%2C%22jdv%22%3A%22177095863%7Candroidapp%7Ct_335139774%7Cappshare%7CCopyURL%7C1572882675599%22%2C%22ref%22%3A%22https%3A%2F%2Fbunearth.m.jd.com%2FbabelDiy%2FZeus%2F3xAU77DgiPoDvHdbXUZb95a7u71X%2Findex.html%22%2C%22psn%22%3A%221664140455%7C472%22%2C%22psq%22%3A5%2C%22pc_source%22%3A%22%22%2C%22mba_muid%22%3A%221664140455%22%2C%22mba_sid%22%3A%221572979455588510925986537476%22%2C%22std%22%3A%22MO-J2011-1%22%2C%22par%22%3A%22%22%2C%22event_id%22%3A%22Mnpm_ComponentApplied%22%2C%22mt_xid%22%3A%22%22%2C%22mt_subsite%22%3A%22%22%7D%2C%22SE%22%3A%7B%22mt_subsite%22%3A%22%22%2C%22__jdv%22%3A%22177095863%7Candroidapp%7Ct_335139774%7Cappshare%7CCopyURL%7C1572882675599%22%2C%22__jda%22%3A%22177095863.1664140455.1538579865.1572975960.1572979455.472%22%7D%7D",
-    });
-    log("进入个人中心");
-    sleep(1000 * speed);
-
-    className("android.view.View").text("做任务领金币").waitFor();
-
-    sleep(1000 * speed);
-    if (!textContains("任务每日0点刷新").exists()) {
-      className("android.view.View").text("做任务领金币").findOne().parent().click()
-
-    }
-
-    textContains("任务每日0点刷新").waitFor()
-    sleep(1000 * speed);
+    gotoJd();
     var e = text("去完成").findOnce(j);
     if (e == null) {
       log("貌似没有任务了，脚本退出\n如未完成，请重新运行");
@@ -212,16 +183,24 @@ function correct() {
  * 打开京东App并跳转到任务栏
  */
 function gotoJd() {
-
-  app.startActivity({
-    data: "openApp.jdMobile://virtual?params=%7B%22des%22%3A%22m%22%2C%22url%22%3A%22https%3A%2F%2Fbunearth.m.jd.com%2FbabelDiy%2FZeus%2F3xAU77DgiPoDvHdbXUZb95a7u71X%2Findex.html%22%2C%22category%22%3A%22jump%22%2C%22sourceType%22%3A%22JSHOP_SOURCE_TYPE%22%2C%22sourceValue%22%3A%22JSHOP_SOURCE_VALUE%22%2C%22M_sourceFrom%22%3A%22lkyl%22%2C%22msf_type%22%3A%22click%22%2C%22m_param%22%3A%7B%22m_source%22%3A%220%22%2C%22event_series%22%3A%7B%7D%2C%22jda%22%3A%22177095863.1664140455.1538579865.1572975960.1572979455.472%22%2C%22usc%22%3A%22androidapp%22%2C%22ucp%22%3A%22t_335139774%22%2C%22umd%22%3A%22appshare%22%2C%22utr%22%3A%22CopyURL%22%2C%22jdv%22%3A%22177095863%7Candroidapp%7Ct_335139774%7Cappshare%7CCopyURL%7C1572882675599%22%2C%22ref%22%3A%22https%3A%2F%2Fbunearth.m.jd.com%2FbabelDiy%2FZeus%2F3xAU77DgiPoDvHdbXUZb95a7u71X%2Findex.html%22%2C%22psn%22%3A%221664140455%7C472%22%2C%22psq%22%3A5%2C%22pc_source%22%3A%22%22%2C%22mba_muid%22%3A%221664140455%22%2C%22mba_sid%22%3A%221572979455588510925986537476%22%2C%22std%22%3A%22MO-J2011-1%22%2C%22par%22%3A%22%22%2C%22event_id%22%3A%22Mnpm_ComponentApplied%22%2C%22mt_xid%22%3A%22%22%2C%22mt_subsite%22%3A%22%22%7D%2C%22SE%22%3A%7B%22mt_subsite%22%3A%22%22%2C%22__jdv%22%3A%22177095863%7Candroidapp%7Ct_335139774%7Cappshare%7CCopyURL%7C1572882675599%22%2C%22__jda%22%3A%22177095863.1664140455.1538579865.1572975960.1572979455.472%22%7D%7D",
-  });
+    // 打开京东APP
+    launchApp(appName);
+    log("进入活动中.......");
+    // 睡眠5秒，等待程序加载
+    sleep(5000 * speed);
+    // 进入京东主界面，检查是否存在“我的”右下角，如果存在，点击进去，接着判断是否存在全民叠蛋糕活动，如果有则点击进入
+    if(descContains("我的").exists()){
+        descContains("我的").findOne().click();
+        sleep(1000 * speed);
+        // 判断是否有全民叠蛋糕活动
+        if(textContains("全民").exists()){
+            log("进入叠蛋糕界面");
+            idContains("us").findOne().click();
+        }
+    }
 
   sleep(1000 * speed);
-
   className("android.view.View").text("做任务领金币").waitFor();
-
-
 
   sleep(1000 * speed);
   if (!textContains("任务每日0点刷新").exists()) {
