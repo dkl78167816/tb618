@@ -45,6 +45,7 @@ function DoActions() {
     DoVisitAction("去浏览");
     DoVisitAction("去进店");
     DoVisitAction("去围观");
+    DoLookAction("去观看");
 }
 
 function DoVisitAction(actionName) {
@@ -101,16 +102,16 @@ function ShowMessage(msg) {
 
 function DoLookAction(actionName) {
     if (!text(actionName).exists()) return;
-    // 去签到
+    
     ShowMessage("准备" + actionName)
     while (text(actionName).exists()) {
+        ShowMessage("存在" + actionName);
         text(actionName).findOnce(1000).click();
-        ShowMessage(actionName + "成功");
+        ShowMessage("完成" + actionName);
         back();
-        sleep(5000);
+        sleep(1000);
     }
     ShowMessage("完成" + actionName);
-    sleep(1500);
 }
 
 function IsMainForm() {
