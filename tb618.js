@@ -49,7 +49,9 @@ function DoActions() {
     DoFarmAction();
 }
 
-function WaitActionFinished(Timeout = 15000) {
+function WaitActionFinished(Timeout) {
+    if(!Timeout) Timeout = 15000;
+    
     var Timer = 0
     // 这个等待最多15s
     while (
