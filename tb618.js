@@ -16,6 +16,9 @@ if (!GlobalDisableWaitFor) {
         ShowMessage("版本号低于400，请手动检查无障碍模式")
     }
 }
+else{
+    ShowMessage("无障碍模式检测已关闭");
+}
 // 获取设备屏幕信息
 var height = device.height;
 var width = device.width;
