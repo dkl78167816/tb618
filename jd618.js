@@ -5,9 +5,9 @@
  * 代码参考并感谢: Mr.Lih,以及没有找到出处的一位大佬
  */
 
+const taskList = ['去加购','8秒', '浏览5个', '浏览可得'];
+const appName = "京东";
 var speed = 1;
-var taskList = ['去加购','8秒', '浏览5个', '浏览可得'];
-var appName = "京东";
 var taskType = 1;
 
 log("请确认无障碍和悬浮窗权限已开启,感谢使用\n作者:dkl78167816\n仅供学习参考");
@@ -33,9 +33,9 @@ if (taskType == 1 && !text("已签到").exists()) {
 var i = 0;
 var j = 0;
 while (taskType == 1) {
-  var next = false;
-  var a = text("去完成").findOnce(j);
-  if (a != null) {
+    let next = false;
+    let a = text("去完成").findOnce(j);
+    if (a != null) {
       //获取父控件
       var b = a.parent().parent().parent();
       //获取第一个子控件
@@ -128,22 +128,11 @@ while (taskType == 1) {
   }
 }
 
-var errorTime = 0;
-while (taskType == 2) {
+
+if (taskType == 2) {
     log("点击金币小人中");
-    var t = idContains("goldElfin").findOne(5000);
-    sleep(random(1000, 1010));
-    if (t == null) {
-        log("-1");
-        errorTime += 1;
-    } else {
-        log("---1");
-        errorTime = 0;
-        t.click();
-    } 
-    if (errorTime == 4) {
-        correct();
-    }
+    var errorTime = 0;
+    while (1) clickGold();
 }
 
 function backPage() {
@@ -161,6 +150,7 @@ function backPage() {
     }
     log("返回操作完成");
 }
+
 /**
  * 偏离脚本预期界面，进行纠正
  */
@@ -235,6 +225,21 @@ function chooseTask() {
     }
 }
 
+function clickGold() {
+    var t = idContains("goldElfin").findOne(5000);
+    if (t == null) {
+        log("-1");
+        errorTime += 1;
+    } else {
+        log("---1");
+        errorTime = 0;
+        t.click();
+        sleep(random(1000, 1010));
+    } 
+    if (errorTime == 4) {
+        correct();
+    }  
+}
 // menu: while (true) {
 //   var choose = dialogs.select("请根据你的手机性能(卡不卡)以及网速选择速度", "快速", "一般", "缓慢");
 //   switch (choose) {
