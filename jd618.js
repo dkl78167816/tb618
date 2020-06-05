@@ -8,50 +8,31 @@
 var speed = 1;
 var taskList = ['去加购','8秒', '浏览5个', '浏览可得'];
 var appName = "京东";
+var taskType = 1;
 
-dialogs.alert("请确认无障碍和悬浮窗权限已开启,感谢使用\n作者:dkl78167816\n仅供学习参考");
-menu: while (true) {
-  var choose = dialogs.select("请根据你的手机性能(卡不卡)以及网速选择速度", "快速", "一般", "缓慢");
-  switch (choose) {
-    case -1:
-      toast("请选择");
-      continue menu;
-    case 0:
-      toast("即将快速执行脚本");
-      speed = 1;
-      break menu;
-    case 1:
-      toast("即将一般速度执行脚本");
-      speed = 1.5;
-      break menu;
-    case 2:
-      toast("即将低速执行脚本");
-      speed = 2;
-      break menu;
-
-    default:
-      break;
-  }
-}
+log("请确认无障碍和悬浮窗权限已开启,感谢使用\n作者:dkl78167816\n仅供学习参考");
+chooseTask();
 console.show();
 auto.waitFor();
 
-var i = 0;
-var j = 0;
-sleep(1000);
 //打开活动页面
-log("正在进入个人中心");
-gotoJd();
+if (taskType == 1) {
+    gotoActivity(true);
+} else {
+    gotoActivity(false);
+}
 
 sleep(1000 * speed);
 //签到
-if (!text("已签到").exists()) {
+if (taskType == 1 && !text("已签到").exists()) {
     text("签到").findOne().parent().click();
+    log("已签到");
+    sleep(100);
 }
-log("已签到");
-sleep(100);
 
-while (1) {
+var i = 0;
+var j = 0;
+while (taskType == 1) {
   var next = false;
   var a = text("去完成").findOnce(j);
   if (a != null) {
@@ -68,16 +49,16 @@ while (1) {
                         log("开始执行8秒任务");
                         a.click();
                         j = 0;
-                        timer = 0
+                        var timer = 0
                         while (!textContains("恭喜完成").exists()) {
-                            sleep(5000)
+                            sleep(5000);
                             timer += 5000;
                             if (timer >= 20000) {
                                 break;
                             }
                         }
+                        if (timer >= 20000) break;
                         log("已完成第" + i + "次任务！");
-                        // descContains("返回").findOne().click();
                         backPage();
                         sleep(1000);
                     }
@@ -147,12 +128,38 @@ while (1) {
   }
 }
 
+var errorTime = 0;
+while (taskType == 2) {
+    log("点击金币小人中");
+    var t = idContains("goldElfin").findOne(5000);
+    sleep(random(1000, 1010));
+    if (t == null) {
+        log("-1");
+        errorTime += 1;
+    } else {
+        log("---1");
+        errorTime = 0;
+        t.click();
+    } 
+    if (errorTime == 4) {
+        correct();
+    }
+}
+
 function backPage() {
     try {
-        id("fe").findOne().click();
+        id("fe").findOne().click();       
+        log("点击id为fe的按钮");  
     } catch (error) {
-        back();
+        try {
+            descContains("返回").findOne().click();
+            log("点击文本为返回的按钮");
+        } catch (error) {
+            back();
+            log("系统返回");
+        }
     }
+    log("返回操作完成");
 }
 /**
  * 偏离脚本预期界面，进行纠正
@@ -168,7 +175,7 @@ function correct() {
     }
 
     log("正在尝试第二次纠正");
-    gotoJd();
+    gotoActivity(task=true);
     if (text("去完成").findOnce(j) == null) {
         log("貌似没有任务了，脚本退出\n如未完成，请重新运行");
         exit();
@@ -176,39 +183,78 @@ function correct() {
 }
 
 /**
- * 打开京东App并跳转到任务栏
+ * 打开京东App并跳转到活动页面
  */
-function gotoJd() {
+function gotoActivity(task) {
     // 打开京东APP
     launchApp(appName);
     log("进入活动中.......");
     // 睡眠5秒，等待程序加载
     sleep(5000 * speed);
-    // 进入京东主界面，检查是否存在“我的”右下角，如果存在，点击进去，接着判断是否存在全民叠蛋糕活动，如果有则点击进入
+    //检测是否在主界面，如果在，进入个人中心
+    //如果不在，检测是否在个人中心，如果在，进入活动
+    //如果不在，检测是否在活动页面，如果不在，进行纠正
     if(descContains("我的").exists()){
         descContains("我的").findOne().click();
-
-        // 判断是否有全民叠蛋糕活动
-        var count = 0
-        while (!textContains("全民").exists()) {
-            if (count > 5) {
-                exit();
-            }
-            count += 1
-            sleep(1000 * speed);
-        }
-        log("进入叠蛋糕界面");
+        sleep(2000 * speed);
         idContains("us").findOne().click();
-    } else correct();
+    } else if (idContains("us").findOne(1000) != null) {
+        idContains("us").findOne().click();
+    } else if (className("android.view.View").text("做任务领金币").findOne(2000) == null) {
+        correct();
+    };
 
-  sleep(1000 * speed);
-  className("android.view.View").text("做任务领金币").waitFor();
-
-  sleep(1000 * speed);
-  if (!textContains("任务每日0点刷新").exists()) {
-    className("android.view.View").text("做任务领金币").findOne().parent().click()
-
-  }
-  textContains("任务每日0点刷新").waitFor()
-  sleep(1000 * speed);
+    if (task == true) {
+        className("android.view.View").text("做任务领金币").waitFor();
+        if (!textContains("任务每日0点刷新").exists()) {
+            className("android.view.View").text("做任务领金币").findOne().parent().click()
+        }
+        textContains("任务每日0点刷新").waitFor()
+        sleep(1000 * speed);
+    }
 }
+
+/** 
+ * 选择脚本任务
+*/
+function chooseTask() {
+    var choose = dialogs.select("选择功能", "做任务", "点击金币小人");
+    switch (choose) {
+        case -1:
+            toast("请选择");
+            log("默认进行任务")
+            break;
+        case 0:
+            toast("开始做任务");
+            taskType = 1;
+            break;
+        case 1:
+            toast("开始点击金币小人");
+            taskType = 2;
+            break;
+    }
+}
+
+// menu: while (true) {
+//   var choose = dialogs.select("请根据你的手机性能(卡不卡)以及网速选择速度", "快速", "一般", "缓慢");
+//   switch (choose) {
+//     case -1:
+//       toast("请选择");
+//       continue menu;
+//     case 0:
+//       toast("即将快速执行脚本");
+//       speed = 1;
+//       break menu;
+//     case 1:
+//       toast("即将一般速度执行脚本");
+//       speed = 1.5;
+//       break menu;
+//     case 2:
+//       toast("即将低速执行脚本");
+//       speed = 2;
+//       break menu;
+
+//     default:
+//       break;
+//   }
+// }
