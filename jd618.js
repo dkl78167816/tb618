@@ -68,8 +68,13 @@ while (1) {
                         log("开始执行8秒任务");
                         a.click();
                         j = 0;
+                        timer = 0
                         while (!textContains("恭喜完成").exists()) {
                             sleep(5000)
+                            timer += 5000;
+                            if (timer >= 20000) {
+                                break;
+                            }
                         }
                         log("已完成第" + i + "次任务！");
                         // descContains("返回").findOne().click();
@@ -84,7 +89,9 @@ while (1) {
                         log("开始执行浏览5个商品任务");
                         sleep(random(501, 515) * speed);
                         a.click();
-                        sleep(random(1001, 1031) * speed);
+                        while (idContains("view_").findOnce(0) == null) {
+                            sleep(random(501, 531) * speed);
+                        }
                         for (var t = 0; t < 5; t++) {
                             if (textContains("浏览以下").findOnce()) {
                                 idContains("view_").findOnce(t).click();
