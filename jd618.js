@@ -121,7 +121,7 @@ function doBuyList(button) {
     }
     for (var t = 0; t < 5; t++) {
         idContains("cart_").findOnce(t).click();
-        sleep(random(1501, 1531) * speed)
+        sleep(random(1501, 1531) * speed);
     }
 
     finishText = textStartsWith("已完成").findOne(6000 * speed);
@@ -184,14 +184,16 @@ function correct() {
  * 打开京东App并跳转到活动页面
  */
 function gotoActivity(task) {
-    // 打开京东APP
-    launchApp(appName);
     log("进入活动中.......");
-    // 睡眠5秒，等待程序加载
-    sleep(5000 * speed);
-    //检测是否在主界面，如果在，进入个人中心
-    //如果不在，检测是否在个人中心，如果在，进入活动
-    //如果不在，检测是否在活动页面，如果不在，进行纠正
+    if(!packageName("com.jingdong.app.mall").exists()) {
+        // 打开京东APP
+        launchApp(appName);
+        // 睡眠5秒，等待程序加载
+        sleep(7000 * speed);
+        //检测是否在主界面，如果在，进入个人中心
+        //如果不在，检测是否在个人中心，如果在，进入活动
+        //如果不在，检测是否在活动页面，如果不在，进行纠正
+    }
     if(descContains("我的").exists()){
         descContains("我的").findOne().click();
         sleep(2000 * speed);
