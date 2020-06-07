@@ -58,6 +58,12 @@ while (taskType == 1) {
     } else correct();
 }
 
+if (taskType == 2) {
+    log("点击金币小人中");
+    var errorTime = 0;
+    while (1) clickGold();
+}
+
 /**
  * 点击按钮，以设定的浏览时长浏览页面，完成后回退页面
  * param button: 点击的按钮
@@ -133,18 +139,6 @@ function doBuyList(button) {
 
     backPage();
     buttonIndex = max(0, buttonIndex-1);
-}
-
-if (taskType == 2) {
-    log("点击金币小人中");
-    var errorTime = 0;
-    while (1) clickGold();
-}
-
-function max(a, b) {
-    if (a > b)
-        return a;
-    return b;
 }
 
 function backPage() {
@@ -242,10 +236,16 @@ function clickGold() {
     } else {
         errorTime = 0;
         t.click();
-        sleep(random(1000, 1200));
+        sleep(random(1200, 1400));
     } 
     if (errorTime == 4) {
         log("不存在金币小人");
         correct();
     }  
+}
+
+function max(a, b) {
+    if (a > b)
+        return a;
+    return b;
 }
